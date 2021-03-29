@@ -19,6 +19,7 @@ import com.zj.banner.ui.indicator.BannerGravity.BottomRight
  * @param indicatorDistance 指示器之间的距离
  * @param indicatorSize 指示器默认圆大小
  * @param selectIndicatorSize 指示器选中圆大小
+ * @param gravity 指示器位置
  */
 class CircleIndicator(
     var indicatorColor: Color = Color(30, 30, 33, 90),
@@ -26,11 +27,11 @@ class CircleIndicator(
     var indicatorDistance: Int = 50,
     var indicatorSize: Float = 10f,
     var selectIndicatorSize: Float = 13f,
+    override var gravity: Int = BottomCenter,
 ) : Indicator() {
 
     @Composable
     override fun DrawIndicator(pagerState: PagerState) {
-        val gravity = getGravity()
         for (pageIndex in 0..pagerState.maxPage) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val canvasWidth = size.width

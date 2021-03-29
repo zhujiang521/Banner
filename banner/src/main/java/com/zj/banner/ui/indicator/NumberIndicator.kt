@@ -26,21 +26,19 @@ import com.zj.banner.ui.indicator.BannerGravity.BottomRight
  * @param numberColor 数字的颜色
  * @param circleSize 背景圆的半径
  * @param fontSize 页码文字大小
+ * @param gravity 指示器位置
  */
 class NumberIndicator(
-    var backgroundColor: Color =  Color(30, 30, 33, 90),
+    var backgroundColor: Color = Color(30, 30, 33, 90),
     var numberColor: Color = Color.White,
     var circleSize: Dp = 35.dp,
     var fontSize: TextUnit = 15.sp,
+    override var gravity: Int = BottomRight,
 ) : Indicator() {
-
-    init {
-        setGravity(BottomRight)
-    }
 
     @Composable
     override fun DrawIndicator(pagerState: PagerState) {
-        val alignment: Alignment = when (getGravity()) {
+        val alignment: Alignment = when (gravity) {
             BannerGravity.BottomCenter -> {
                 Alignment.BottomCenter
             }

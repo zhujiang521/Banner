@@ -30,6 +30,7 @@ private const val TAG = "BannerPager"
  */
 @Composable
 fun <T : BaseBannerBean> BannerPager(
+    modifier: Modifier = Modifier,
     items: List<T> = arrayListOf(),
     repeat: Boolean = true,
     config: BannerConfig = BannerConfig(),
@@ -48,7 +49,7 @@ fun <T : BaseBannerBean> BannerPager(
 
     pagerState.maxPage = (items.size - 1).coerceAtLeast(0)
 
-    Box(modifier = Modifier.fillMaxWidth().height(config.bannerHeight)) {
+    Box(modifier = modifier.height(config.bannerHeight)) {
         Pager(
             state = pagerState,
             modifier = Modifier.fillMaxWidth().height(config.bannerHeight)

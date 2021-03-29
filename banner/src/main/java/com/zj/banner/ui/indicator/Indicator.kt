@@ -10,15 +10,7 @@ import com.zj.banner.ui.indicator.BannerGravity.BottomCenter
  */
 abstract class Indicator {
 
-    private var gravity: Int = BottomCenter
-
-    fun setGravity(gravity: Int) {
-        this.gravity = gravity
-    }
-
-    fun getGravity(): Int {
-        return gravity
-    }
+    abstract var gravity: Int
 
     @Composable
     abstract fun DrawIndicator(pagerState: PagerState)
