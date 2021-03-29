@@ -15,3 +15,5 @@
 app/release/output-metadata.json
 app/release/app-release.apk
 .idea/misc.xml
+.gradle/6.8.2
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
