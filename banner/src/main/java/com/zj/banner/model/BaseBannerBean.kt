@@ -4,10 +4,6 @@ package com.zj.banner.model
  * Banner Model 的基类
  */
 abstract class BaseBannerBean {
-    // 图片 url
-    abstract val url: String
-    // 图片文件路径
-    abstract val filePath: String
-    // 图片 drawable id
-    abstract val imgRes: Int
+    // 图片资源 可以是：url、文件路径或者是 drawable id
+    abstract val data: Any?
 }

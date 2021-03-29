@@ -32,7 +32,7 @@ fun <T : BaseBannerBean> BannerCard(
     shape: Shape = RoundedCornerShape(10.dp),
     onBannerClick: () -> Unit,
 ) {
-    if (bean.filePath.isEmpty() && bean.url.isEmpty() && bean.imgRes <= 0) {
+    if (bean.data == null) {
         throw NullPointerException("Url or imgRes or filePath must have a not for empty.")
     }
 
@@ -41,28 +41,39 @@ fun <T : BaseBannerBean> BannerCard(
         modifier = modifier
     ) {
         val imgModifier = Modifier.clickable(onClick = onBannerClick)
-        if (bean.url.isEmpty()) {
-            Log.d(TAG, "PostCardPopular: 加载本地图片")
-            val painter = if (bean.imgRes <= 0) {
-                val bitmap = BitmapFactory.decodeFile(bean.filePath)
-                BitmapPainter(bitmap.asImageBitmap())
-            } else {
-                painterResource(bean.imgRes)
+        when (bean.data) {
+            is String -> {
+                val img = bean.data as String
+                if (img.contains("https://") || img.contains("http://")) {
+                    Log.d(TAG, "PostCardPopular: 加载网络图片")
+                    CoilImage(
+                        data = img,
+                        contentDescription = null,
+                        modifier = imgModifier
+                    )
+                } else {
+                    Log.d(TAG, "PostCardPopular: 加载本地图片")
+                    val bitmap = BitmapFactory.decodeFile(img)
+                    Image(
+                        modifier = imgModifier,
+                        painter = BitmapPainter(bitmap.asImageBitmap()),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
-            Image(
-                modifier = imgModifier,
-                painter = painter,
-                contentDescription = "",
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            Log.d(TAG, "PostCardPopular: 加载网络图片")
-            CoilImage(
-                data = bean.url,
-                contentDescription = null,
-                modifier = imgModifier
-            )
+            is Int -> {
+                Log.d(TAG, "PostCardPopular: 加载本地资源图片")
+                Image(
+                    modifier = imgModifier,
+                    painter = painterResource(bean.data as Int),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else -> {
+                throw IllegalArgumentException("参数类型不符合要求，只能是：url、文件路径或者是 drawable id")
+            }
         }
-
     }
 }
