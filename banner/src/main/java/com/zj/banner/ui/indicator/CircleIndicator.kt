@@ -62,7 +62,7 @@ class CircleIndicator(
                 drawCircle(
                     color,
                     inSize,
-                    center = Offset(start + pageIndex * indicatorDistance, canvasHeight)
+                    center = Offset(start + pageIndex * indicatorDistance, canvasHeight - 50f)
                 )
             }
         }
