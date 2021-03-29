@@ -20,16 +20,18 @@ import com.zj.banner.ui.PagerState
 import com.zj.banner.ui.indicator.BannerGravity.BottomRight
 
 /**
- * 数字指示器，显示数字的指示器
+ * 数字指示器，显示数字的指示器  eg: 1/5
+ *
  * @param backgroundColor 数字指示器背景颜色
  * @param numberColor 数字的颜色
- *
+ * @param circleSize 背景圆的半径
+ * @param fontSize 页码文字大小
  */
 class NumberIndicator(
-    var backgroundColor: Color = Color.Red,
-    var numberColor: Color = Color.Green,
+    var backgroundColor: Color =  Color(30, 30, 33, 90),
+    var numberColor: Color = Color.White,
     var circleSize: Dp = 35.dp,
-    var fontSize: TextUnit = 16.sp,
+    var fontSize: TextUnit = 15.sp,
 ) : Indicator() {
 
     init {

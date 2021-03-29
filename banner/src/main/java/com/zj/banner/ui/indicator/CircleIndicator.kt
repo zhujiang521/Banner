@@ -13,14 +13,19 @@ import com.zj.banner.ui.indicator.BannerGravity.BottomRight
 
 /**
  * 圆形指示器 eg：。。. 。。
+ *
  * @param indicatorColor 指示器默认颜色
  * @param selectIndicatorColor 指示器选中颜色
  * @param indicatorDistance 指示器之间的距离
+ * @param indicatorSize 指示器默认圆大小
+ * @param selectIndicatorSize 指示器选中圆大小
  */
 class CircleIndicator(
-    var indicatorColor: Color = Color.Red,
+    var indicatorColor: Color = Color(30, 30, 33, 90),
     var selectIndicatorColor: Color = Color.Green,
-    var indicatorDistance: Int = 50
+    var indicatorDistance: Int = 50,
+    var indicatorSize: Float = 10f,
+    var selectIndicatorSize: Float = 13f,
 ) : Indicator() {
 
     @Composable
@@ -30,12 +35,15 @@ class CircleIndicator(
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val canvasWidth = size.width
                 val canvasHeight = size.height
-                val color =
-                    if (pageIndex == pagerState.currentPage) {
-                        indicatorColor
-                    } else {
-                        selectIndicatorColor
-                    }
+                val color: Color
+                val inSize: Float
+                if (pageIndex == pagerState.currentPage) {
+                    color = selectIndicatorColor
+                    inSize = selectIndicatorSize
+                } else {
+                    color = indicatorColor
+                    inSize = indicatorSize
+                }
                 val start = when (gravity) {
                     BottomCenter -> {
                         val width = canvasWidth - pagerState.maxPage * indicatorDistance
@@ -52,7 +60,7 @@ class CircleIndicator(
                 }
                 drawCircle(
                     color,
-                    10f,
+                    inSize,
                     center = Offset(start + pageIndex * indicatorDistance, canvasHeight)
                 )
             }
