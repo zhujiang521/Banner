@@ -1,19 +1,17 @@
 package com.zj.test
 
 import android.widget.Toast
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.BannerPager
+import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.ui.indicator.BannerGravity
 import com.zj.banner.ui.indicator.CircleIndicator
 import com.zj.banner.ui.indicator.NumberIndicator
