@@ -72,5 +72,4 @@ android {
 dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     api "dev.chrisbanes.accompanist:accompanist-coil:0.6.2"
-    api "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03"
 }

@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.ui.BannerCard
 import com.zj.banner.ui.Pager
@@ -14,6 +14,9 @@ import com.zj.banner.ui.config.BannerConfig
 import com.zj.banner.ui.indicator.CircleIndicator
 import com.zj.banner.ui.indicator.Indicator
 import com.zj.banner.ui.indicator.NumberIndicator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import java.util.*
 
 private const val TAG = "BannerPager"
 
@@ -41,10 +44,10 @@ fun <T : BaseBannerBean> BannerPager(
         throw NullPointerException("items is not null")
     }
 
-    val viewModel: BannerViewModel = viewModel()
     val pagerState: PagerState = remember { PagerState() }
+    val coroutineScope = rememberCoroutineScope()
     if (repeat) {
-        viewModel.startBanner(pagerState, config.intervalTime)
+        startBanner(pagerState, config.intervalTime, coroutineScope)
     }
 
     pagerState.maxPage = (items.size - 1).coerceAtLeast(0)
@@ -67,4 +70,21 @@ fun <T : BaseBannerBean> BannerPager(
 
         indicator.DrawIndicator(pagerState)
     }
+}
+
+var mTimer: Timer? = null
+var mTimerTask:TimerTask? = null
+
+fun startBanner(pagerState: PagerState, intervalTime: Long, coroutineScope: CoroutineScope) {
+    mTimer?.cancel()
+    mTimerTask?.cancel()
+    mTimer = Timer()
+    mTimerTask = object : TimerTask() {
+        override fun run() {
+            coroutineScope.launch {
+                pagerState.setNextPage()
+            }
+        }
+    }
+    mTimer?.schedule(mTimerTask, intervalTime, intervalTime)
 }

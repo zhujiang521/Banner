@@ -1,5 +1,6 @@
 package com.zj.banner.ui
 
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
