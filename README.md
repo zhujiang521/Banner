@@ -520,8 +520,4 @@ class NumberIndicator(
 
 其实还有很多没有写到的内容，比如图片切换的动画。。。一个优秀的库不是一两天就能写完的，希望大家能多给我提点建议。
 
-我会尽快把这个库上传到 `JitPack` 中，到时候大家就可以加一行依赖直接使用了。
-
-最后放一下 `Github` 库的地址吧：[https://github.com/zhujiang521/Banner](https://github.com/zhujiang521/Banner)
-
 对大家如果有帮助的话别忘了点 `Star` 啊！感激不尽！！！
