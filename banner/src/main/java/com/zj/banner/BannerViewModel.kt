@@ -30,7 +30,7 @@ class BannerViewModel : ViewModel() {
             }
         }
 
-        timer?.schedule(mTimerTask, 5000, intervalTime)
+        timer?.schedule(mTimerTask, 3000, intervalTime)
     }
 
     override fun onCleared() {
