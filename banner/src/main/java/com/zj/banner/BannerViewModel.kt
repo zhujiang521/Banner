@@ -9,23 +9,19 @@ import java.util.*
 class BannerViewModel : ViewModel() {
 
     private var timer: Timer? = null
-    private var _isActive = false
+    private var mTimerTask: TimerTask? = null
+    private var isActive = false
 
     fun startBanner(pagerState: PagerState, intervalTime: Long) {
-        if (_isActive) {
+        if (isActive) {
             return
         }
-        _isActive = true
+        isActive = true
         timer = Timer()
-        val mTimerTask: TimerTask = object : TimerTask() {
+        mTimerTask = object : TimerTask() {
             override fun run() {
                 viewModelScope.launch {
-                    if (pagerState.currentPage == pagerState.maxPage) {
-                        pagerState.currentPage = 0
-                    } else {
-                        pagerState.currentPage++
-                    }
-                    pagerState.fling(-1f)
+                    pagerState.setNextPage()
                 }
             }
         }
@@ -36,6 +32,7 @@ class BannerViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         timer?.cancel()
+        mTimerTask?.cancel()
     }
 
 }

@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package com.zj.banner.ui
 
 import androidx.compose.animation.core.Animatable
@@ -67,6 +65,18 @@ class PagerState(
         block()
     } finally {
         selectPage()
+    }
+
+    /**
+     * 切换下一个页面
+     */
+    suspend fun setNextPage() {
+        if (currentPage == maxPage) {
+            currentPage = 0
+        } else {
+            currentPage++
+        }
+        fling(-1f)
     }
 
     suspend fun selectPage() {
