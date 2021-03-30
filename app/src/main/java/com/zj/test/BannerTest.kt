@@ -27,26 +27,27 @@ fun BannerTest() {
     val scroller = rememberScrollState()
     Column(modifier = Modifier.fillMaxSize().verticalScroll(scroller)) {
 
-//        val items = arrayListOf(
-//            BannerBean(
-//                "https://wanandroid.com/blogimgs/8a0131ac-05b7-4b6c-a8d0-f438678834ba.png",
-//            ),
-//            BannerBean(
-//                "https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png",
-//            ),
-//            BannerBean(
-//                "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
-//            ),
-//            BannerBean(
-//                "https://www.wanandroid.com/blogimgs/90c6cc12-742e-4c9f-b318-b912f163b8d0.png",
-//            ),
-//        )
-//
-//        BannerPager(
-//            items = items,
-//        ) { item ->
-//            Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
-//        }
+
+        val items = arrayListOf(
+            BannerBean(
+                "https://wanandroid.com/blogimgs/8a0131ac-05b7-4b6c-a8d0-f438678834ba.png",
+            ),
+            BannerBean(
+                "https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png",
+            ),
+            BannerBean(
+                "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png",
+            ),
+            BannerBean(
+                "https://www.wanandroid.com/blogimgs/90c6cc12-742e-4c9f-b318-b912f163b8d0.png",
+            ),
+        )
+
+        BannerPager(
+            items = items,
+        ) { item ->
+            Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
+        }
 
 
         val items2 = arrayListOf(
@@ -65,22 +66,22 @@ fun BannerTest() {
         }
 
 
-//        BannerPager(
-//            modifier = Modifier.padding(top = 10.dp),
-//            items = items,
-//            indicator = NumberIndicator()
-//        ) { item ->
-//            Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
-//        }
-//
-//
-//        BannerPager(
-//            modifier = Modifier.padding(top = 10.dp),
-//            items = items2,
-//            indicator = NumberIndicator(gravity = BannerGravity.BottomLeft)
-//        ) { item ->
-//            Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
-//        }
+        BannerPager(
+            modifier = Modifier.padding(top = 10.dp),
+            items = items,
+            indicator = NumberIndicator()
+        ) { item ->
+            Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
+        }
+
+
+        BannerPager(
+            modifier = Modifier.padding(top = 10.dp),
+            items = items2,
+            indicator = NumberIndicator(gravity = BannerGravity.BottomLeft)
+        ) { item ->
+            Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
+        }
 
     }
 }
