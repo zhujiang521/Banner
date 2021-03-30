@@ -4,6 +4,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zj.banner.ui.pagetransformer.BasePageTransformer
 
 data class BannerConfig(
     // banner 高度
@@ -13,5 +14,9 @@ data class BannerConfig(
     // banner 图片的 shape
     var shape: Shape = RoundedCornerShape(10.dp),
     // banner 切换间隔时间
-    var intervalTime: Long = 3000
+    var intervalTime: Long = 3000,
+    // 是否循环播放
+    var repeat: Boolean = true,
+    // banner 图片切换动画
+    var transformer: BasePageTransformer? = null
 )

@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.unit.Density
+import com.zj.banner.ui.pagetransformer.BasePageTransformer
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -107,6 +108,13 @@ class PagerState(
 
     override fun toString(): String = "PagerState{minPage=$minPage, maxPage=$maxPage, " +
             "currentPage=$currentPage, currentPageOffset=$currentPageOffset}"
+
+    /**
+     * 设置图片切换动画
+     */
+    fun setTransformer(transformer: BasePageTransformer?) {
+
+    }
 }
 
 @Immutable

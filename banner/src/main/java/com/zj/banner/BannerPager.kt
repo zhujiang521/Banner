@@ -14,7 +14,7 @@ import com.zj.banner.ui.config.BannerConfig
 import com.zj.banner.ui.indicator.CircleIndicator
 import com.zj.banner.ui.indicator.Indicator
 import com.zj.banner.ui.indicator.NumberIndicator
-import kotlinx.coroutines.CoroutineScope
+import com.zj.banner.ui.pagetransformer.BasePageTransformer
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -25,19 +25,19 @@ private const val TAG = "BannerPager"
  * 这里需要注意的是，数据 Model 必须要继承自 [BaseBannerBean]，因为在 [BannerCard] 中需要使用到其中的一些参数
  *
  * @param items 数据
- * @param repeat 是否循环播放
  * @param config Banner 的一些配置参数 [BannerConfig]
  * @param indicator Banner 指示器，你可以使用默认的 [CircleIndicator] 或 [NumberIndicator]，也可以自定义，仅需要继承
  * [Indicator] 即可。
+ * @param transformer 图片切换动画，可以使用默认的，也可以通过继承 [BasePageTransformer] 进行自定义
  * @param onBannerClick Banner 点击事件的回调
  */
 @Composable
 fun <T : BaseBannerBean> BannerPager(
     modifier: Modifier = Modifier,
     items: List<T> = arrayListOf(),
-    repeat: Boolean = true,
     config: BannerConfig = BannerConfig(),
     indicator: Indicator = CircleIndicator(),
+    transformer: BasePageTransformer? = null,
     onBannerClick: (T) -> Unit
 ) {
     if (items.isEmpty()) {
@@ -45,12 +45,12 @@ fun <T : BaseBannerBean> BannerPager(
     }
 
     val pagerState: PagerState = remember { PagerState() }
-    val coroutineScope = rememberCoroutineScope()
-    if (repeat) {
-        startBanner(pagerState, config.intervalTime, coroutineScope)
-    }
-
+    pagerState.setTransformer(transformer)
     pagerState.maxPage = (items.size - 1).coerceAtLeast(0)
+
+    if (config.repeat) {
+        startBanner(pagerState, config.intervalTime)
+    }
 
     Box(modifier = modifier.height(config.bannerHeight)) {
         Pager(
@@ -75,7 +75,8 @@ fun <T : BaseBannerBean> BannerPager(
 var mTimer: Timer? = null
 var mTimerTask:TimerTask? = null
 
-fun startBanner(pagerState: PagerState, intervalTime: Long, coroutineScope: CoroutineScope) {
+fun startBanner(pagerState: PagerState, intervalTime: Long) {
+    val coroutineScope = rememberCoroutineScope()
     mTimer?.cancel()
     mTimerTask?.cancel()
     mTimer = Timer()
