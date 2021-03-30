@@ -19,13 +19,41 @@
 
 [https://github.com/android/compose-samples/blob/1630f6b35ac9e25fb3cd3a64208d7c9afaaaedc5/Jetcaster/app/src/main/java/com/example/jetcaster/util/Pager.kt#L130](https://github.com/android/compose-samples/blob/1630f6b35ac9e25fb3cd3a64208d7c9afaaaedc5/Jetcaster/app/src/main/java/com/example/jetcaster/util/Pager.kt#L130)
 
-上面既然已经贴了官方的代码了，本着有现成就不重复制造轮子的原则，就不自定义了（主要是懒）。直接把官方的拿过来借鉴下，然后再自己加工一下，只是个简单实现和封装，下面是成果样式，大家凑合看：
+### 创建公共库
+上面既然已经贴了官方的代码了，本着有现成就不重复制造轮子的原则，就不自定义 `ViewPager` 了（主要是懒）。直接把官方的拿过来借鉴下，然后再自己简单实现和封装了下，下面是成果样式，大家凑合看：
 
 <img src="/screenshots/banner.gif" width="360">
 
 还不错吧，哈哈哈！来看看使用这个 `Banner` 需要怎么做吧：
 
-首先需要定义下 `Banner` 的 `Model` ：
+还不错吧，哈哈哈！来看看使用这个 `Banner` 需要怎么做吧：
+
+第一步肯定需要添加依赖了：
+
+首先需要在你项目根目录下的 `build.gradle` 文件中添加以下内容：
+
+```groovy
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+然后需要在你的 `module` 中的 `build.gradle` 文件中添加依赖：
+
+[![](https://jitpack.io/v/zhujiang521/Banner.svg)](https://jitpack.io/#zhujiang521/Banner)
+
+```css
+	dependencies {
+	        implementation 'com.github.zhujiang521:Banner:Tag'
+	}
+```
+
+上面的 `Tag` 处需要填写上面的版本号，第一个可用的版本是 1.3.3
+
+接下来需要先定义下 `Banner` 的 `Model` ：
 
 ```kotlin
 data class BannerBean(
