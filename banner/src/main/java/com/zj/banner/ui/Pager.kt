@@ -1,20 +1,12 @@
 package com.zj.banner.ui
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.structuralEqualityPolicy
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -35,6 +27,7 @@ class PagerState(
     minPage: Int = 0,
     maxPage: Int = 0
 ) {
+
     private var _minPage by mutableStateOf(minPage)
     var minPage: Int
         get() = _minPage
@@ -62,13 +55,6 @@ class PagerState(
 
     var selectionState by mutableStateOf(SelectionState.Selected)
 
-    suspend inline fun <R> selectPage(block: PagerState.() -> R): R = try {
-        selectionState = SelectionState.Undecided
-        block()
-    } finally {
-        selectPage()
-    }
-
     /**
      * 切换下一个页面
      */
@@ -78,10 +64,10 @@ class PagerState(
         } else {
             currentPage++
         }
-        fling(-1f)
-    }
-
-    suspend fun selectPage() {
+        _currentPageOffset.animateTo(
+            currentPageOffset.roundToInt().toFloat(),
+            animationSpec = SpringSpec()
+        )
         currentPage -= currentPageOffset.roundToInt()
         snapToOffset(0f)
         selectionState = SelectionState.Selected
@@ -94,16 +80,29 @@ class PagerState(
         get() = _currentPageOffset.value
 
     suspend fun snapToOffset(offset: Float) {
-        val max = if (currentPage == minPage) 0f else 1f
-        val min = if (currentPage == maxPage) 0f else -1f
-        _currentPageOffset.snapTo(offset.coerceIn(min, max))
+        _currentPageOffset.snapTo(offset.coerceIn(-1f, 1f))
     }
 
     suspend fun fling(velocity: Float) {
-        if (velocity < 0 && currentPage == maxPage) return
-        if (velocity > 0 && currentPage == minPage) return
-        _currentPageOffset.animateTo(currentPageOffset.roundToInt().toFloat())
-        selectPage()
+        var currentPager = true
+        if (velocity < 0 && currentPage == maxPage) {
+            currentPage = minPage
+            currentPager = false
+        }
+        if (velocity > 0 && currentPage == minPage) {
+            currentPage = maxPage
+            currentPager = false
+        }
+        _currentPageOffset.animateTo(
+            currentPageOffset.roundToInt().toFloat(),
+            animationSpec = SpringSpec(stiffness = 2200f)
+        )
+
+        if (currentPager) {
+            currentPage -= currentPageOffset.roundToInt()
+        }
+        snapToOffset(0f)
+        selectionState = SelectionState.Selected
     }
 
     override fun toString(): String = "PagerState{minPage=$minPage, maxPage=$maxPage, " +
@@ -129,13 +128,14 @@ private val Measurable.page: Int
 fun Pager(
     state: PagerState,
     modifier: Modifier = Modifier,
-    offscreenLimit: Int = 2,
+    offscreenLimit: Int = 1,
     pageContent: @Composable PagerScope.() -> Unit
 ) {
     var pageSize by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
     Layout(
         content = {
+
             val minPage = (state.currentPage - offscreenLimit).coerceAtLeast(state.minPage)
             val maxPage = (state.currentPage + offscreenLimit).coerceAtMost(state.maxPage)
 
@@ -156,8 +156,6 @@ fun Pager(
             },
             onDragStopped = { velocity ->
                 coroutineScope.launch {
-                    // Velocity is in pixels per second, but we deal in percentage offsets, so we
-                    // need to scale the velocity to match
                     state.fling(velocity / pageSize)
                 }
             },
@@ -165,27 +163,25 @@ fun Pager(
                 coroutineScope.launch {
                     with(state) {
                         val pos = pageSize * currentPageOffset
-                        val max = if (currentPage == minPage) 0 else pageSize * offscreenLimit
-                        val min = if (currentPage == maxPage) 0 else -pageSize * offscreenLimit
+                        val max = pageSize * offscreenLimit
+                        val min = -pageSize * offscreenLimit
                         val newPos = (pos + dy).coerceIn(min.toFloat(), max.toFloat())
                         snapToOffset(newPos / pageSize)
                     }
                 }
             },
         )
-    ) { measurables, constraints ->
+    ) { measurable, constraints ->
         layout(constraints.maxWidth, constraints.maxHeight) {
             val currentPage = state.currentPage
             val offset = state.currentPageOffset
             val childConstraints = constraints.copy(minWidth = 0, minHeight = 0)
 
-            measurables
+            measurable
                 .map {
                     it.measure(childConstraints) to it.page
                 }
                 .forEach { (placeable, page) ->
-                    // TODO: current this centers each page. We should investigate reading
-                    //  gravity modifiers on the child, or maybe as a param to Pager.
                     val xCenterOffset = (constraints.maxWidth - placeable.width) / 2
                     val yCenterOffset = (constraints.maxHeight - placeable.height) / 2
 
@@ -194,7 +190,6 @@ fun Pager(
                     }
 
                     val xItemOffset = ((page + offset - currentPage) * placeable.width).roundToInt()
-
                     placeable.place(
                         x = xCenterOffset + xItemOffset,
                         y = yCenterOffset
