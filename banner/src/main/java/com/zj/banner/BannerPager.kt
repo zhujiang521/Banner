@@ -75,6 +75,7 @@ fun <T : BaseBannerBean> BannerPager(
 var mTimer: Timer? = null
 var mTimerTask:TimerTask? = null
 
+@Composable
 fun startBanner(pagerState: PagerState, intervalTime: Long) {
     val coroutineScope = rememberCoroutineScope()
     mTimer?.cancel()
