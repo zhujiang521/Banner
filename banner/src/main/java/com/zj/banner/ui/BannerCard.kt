@@ -24,6 +24,8 @@ private const val TAG = "BannerCard"
  *
  * @param bean banner Model
  * @param modifier
+ * @param shape 图片圆角
+ * @param onBannerClick Banner 图片点击事件
  */
 @Composable
 fun <T : BaseBannerBean> BannerCard(

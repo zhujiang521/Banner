@@ -112,7 +112,7 @@ class PagerState(
      * 设置图片切换动画
      */
     fun setTransformer(transformer: BasePageTransformer?) {
-
+        transformer?.transformPage(this)
     }
 }
 
