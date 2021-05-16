@@ -2,6 +2,7 @@ package com.zj.banner.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -66,7 +67,7 @@ class PagerState(
         }
         _currentPageOffset.animateTo(
             currentPageOffset.roundToInt().toFloat(),
-            animationSpec = SpringSpec()
+            animationSpec = tween(durationMillis = 2000)
         )
         currentPage -= currentPageOffset.roundToInt()
         snapToOffset(0f)
