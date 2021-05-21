@@ -39,8 +39,6 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 30
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -72,4 +70,5 @@ android {
 dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     api "dev.chrisbanes.accompanist:accompanist-coil:0.6.2"
+    api "dev.chrisbanes.accompanist:accompanist-insets:0.6.2"
 }
