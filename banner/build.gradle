@@ -69,6 +69,6 @@ android {
 
 dependencies {
     implementation "androidx.compose.material:material:$compose_version"
-    api "dev.chrisbanes.accompanist:accompanist-coil:0.10.0"
-    api "dev.chrisbanes.accompanist:accompanist-insets:0.10.0"
+    api "com.google.accompanist:accompanist-coil:0.10.0"
+    api "com.google.accompanist:accompanist-insets:0.10.0"
 }

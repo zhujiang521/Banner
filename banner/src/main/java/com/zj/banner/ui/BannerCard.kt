@@ -14,8 +14,8 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.coil.rememberCoilPainter
 import com.zj.banner.model.BaseBannerBean
-import dev.chrisbanes.accompanist.coil.CoilImage
 
 private const val TAG = "BannerCard"
 
@@ -46,23 +46,20 @@ fun <T : BaseBannerBean> BannerCard(
         when (bean.data) {
             is String -> {
                 val img = bean.data as String
-                if (img.contains("https://") || img.contains("http://")) {
+                val painter = if (img.contains("https://") || img.contains("http://")) {
                     Log.d(TAG, "PostCardPopular: 加载网络图片")
-                    CoilImage(
-                        data = img,
-                        contentDescription = null,
-                        modifier = imgModifier
-                    )
+                    rememberCoilPainter(img)
                 } else {
                     Log.d(TAG, "PostCardPopular: 加载本地图片")
                     val bitmap = BitmapFactory.decodeFile(img)
-                    Image(
-                        modifier = imgModifier,
-                        painter = BitmapPainter(bitmap.asImageBitmap()),
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop
-                    )
+                    BitmapPainter(bitmap.asImageBitmap())
                 }
+                Image(
+                    modifier = imgModifier,
+                    painter = painter,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
             }
             is Int -> {
                 Log.d(TAG, "PostCardPopular: 加载本地资源图片")
