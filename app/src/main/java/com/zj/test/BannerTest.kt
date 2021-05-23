@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.zj.banner.BannerPager
 import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.ui.indicator.BannerGravity
@@ -21,6 +22,7 @@ data class BannerBean(
 ) : BaseBannerBean()
 
 
+@ExperimentalPagerApi
 @Composable
 fun BannerTest() {
     val context = LocalContext.current

@@ -25,6 +25,7 @@ private const val TAG = "BannerCard"
  * @param bean banner Model
  * @param modifier
  * @param shape 图片圆角
+ * @param contentScale 纵横比缩放
  * @param onBannerClick Banner 图片点击事件
  */
 @Composable
@@ -32,6 +33,7 @@ fun <T : BaseBannerBean> BannerCard(
     bean: T,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(10.dp),
+    contentScale: ContentScale,
     onBannerClick: () -> Unit,
 ) {
     if (bean.data == null) {
@@ -58,7 +60,7 @@ fun <T : BaseBannerBean> BannerCard(
                     modifier = imgModifier,
                     painter = painter,
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = contentScale
                 )
             }
             is Int -> {
@@ -67,7 +69,7 @@ fun <T : BaseBannerBean> BannerCard(
                     modifier = imgModifier,
                     painter = painterResource(bean.data as Int),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = contentScale
                 )
             }
             else -> {

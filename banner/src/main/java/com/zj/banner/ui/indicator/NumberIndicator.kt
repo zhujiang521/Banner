@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.zj.banner.ui.PagerState
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
 import com.zj.banner.ui.indicator.BannerGravity.BottomRight
 
 /**
@@ -36,6 +37,7 @@ class NumberIndicator(
     override var gravity: Int = BottomRight,
 ) : Indicator() {
 
+    @ExperimentalPagerApi
     @Composable
     override fun DrawIndicator(pagerState: PagerState) {
         val alignment: Alignment = when (gravity) {
@@ -57,7 +59,7 @@ class NumberIndicator(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    "${pagerState.currentPage + 1}/${pagerState.maxPage + 1}",
+                    "${pagerState.currentPage + 1}/${pagerState.pageCount}",
                     color = numberColor,
                     fontSize = fontSize
                 )

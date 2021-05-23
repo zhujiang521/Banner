@@ -5,9 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.zj.test.ui.theme.BannerTheme
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

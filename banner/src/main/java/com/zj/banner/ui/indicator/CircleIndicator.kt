@@ -6,7 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import com.zj.banner.ui.PagerState
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
 import com.zj.banner.ui.indicator.BannerGravity.BottomCenter
 import com.zj.banner.ui.indicator.BannerGravity.BottomLeft
 import com.zj.banner.ui.indicator.BannerGravity.BottomRight
@@ -30,9 +31,10 @@ class CircleIndicator(
     override var gravity: Int = BottomCenter,
 ) : Indicator() {
 
+    @ExperimentalPagerApi
     @Composable
     override fun DrawIndicator(pagerState: PagerState) {
-        for (pageIndex in 0..pagerState.maxPage) {
+        for (pageIndex in 0 until pagerState.pageCount) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val canvasWidth = size.width
                 val canvasHeight = size.height
@@ -47,15 +49,14 @@ class CircleIndicator(
                 }
                 val start = when (gravity) {
                     BottomCenter -> {
-                        val width = canvasWidth - pagerState.maxPage * indicatorDistance
+                        val width = canvasWidth - pagerState.pageCount * indicatorDistance
                         width / 2
                     }
                     BottomLeft -> {
                         100f
                     }
                     BottomRight -> {
-                        canvasWidth - pagerState.maxPage * indicatorDistance - 100f
-
+                        canvasWidth - pagerState.pageCount * indicatorDistance - 100f
                     }
                     else -> 100f
                 }

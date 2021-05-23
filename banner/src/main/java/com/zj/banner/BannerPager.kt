@@ -1,20 +1,23 @@
 package com.zj.banner
 
 import android.util.Log
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.ui.BannerCard
-import com.zj.banner.ui.Pager
-import com.zj.banner.ui.PagerState
 import com.zj.banner.ui.config.BannerConfig
 import com.zj.banner.ui.indicator.CircleIndicator
 import com.zj.banner.ui.indicator.Indicator
 import com.zj.banner.ui.indicator.NumberIndicator
-import com.zj.banner.ui.pagetransformer.BasePageTransformer
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -28,40 +31,35 @@ private const val TAG = "BannerPager"
  * @param config Banner 的一些配置参数 [BannerConfig]
  * @param indicator Banner 指示器，你可以使用默认的 [CircleIndicator] 或 [NumberIndicator]，也可以自定义，仅需要继承
  * [Indicator] 即可。
- * @param transformer 图片切换动画，可以使用默认的，也可以通过继承 [BasePageTransformer] 进行自定义
  * @param onBannerClick Banner 点击事件的回调
  */
+@ExperimentalPagerApi
 @Composable
 fun <T : BaseBannerBean> BannerPager(
     modifier: Modifier = Modifier,
     items: List<T> = arrayListOf(),
     config: BannerConfig = BannerConfig(),
     indicator: Indicator = CircleIndicator(),
-    transformer: BasePageTransformer? = null,
     onBannerClick: (T) -> Unit
 ) {
     if (items.isEmpty()) {
         throw NullPointerException("items is not null")
     }
 
-    val pagerState: PagerState = remember { PagerState() }
-    pagerState.setTransformer(transformer)
-    pagerState.maxPage = (items.size - 1).coerceAtLeast(0)
+    val pagerState = rememberPagerState(pageCount = items.size)
 
     if (config.repeat) {
         startBanner(pagerState, config.intervalTime)
     }
 
     Box(modifier = modifier.height(config.bannerHeight)) {
-        Pager(
-            state = pagerState,
-            modifier = Modifier.fillMaxWidth().height(config.bannerHeight)
-        ) {
+        HorizontalPager(state = pagerState) { page ->
             val item = items[page]
             BannerCard(
                 bean = item,
                 modifier = Modifier.fillMaxSize().padding(config.bannerImagePadding),
-                shape = config.shape
+                shape = config.shape,
+                contentScale = config.contentScale
             ) {
                 Log.d(TAG, "item is :${item.javaClass}")
                 onBannerClick(item)
@@ -73,8 +71,9 @@ fun <T : BaseBannerBean> BannerPager(
 }
 
 var mTimer: Timer? = null
-var mTimerTask:TimerTask? = null
+var mTimerTask: TimerTask? = null
 
+@ExperimentalPagerApi
 @Composable
 fun startBanner(pagerState: PagerState, intervalTime: Long) {
     val coroutineScope = rememberCoroutineScope()
@@ -84,7 +83,7 @@ fun startBanner(pagerState: PagerState, intervalTime: Long) {
     mTimerTask = object : TimerTask() {
         override fun run() {
             coroutineScope.launch {
-                pagerState.setNextPage()
+                pagerState.animateScrollToPage((pagerState.currentPage + 1) % pagerState.pageCount)
             }
         }
     }

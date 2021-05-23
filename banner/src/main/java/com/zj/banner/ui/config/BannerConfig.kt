@@ -2,9 +2,9 @@ package com.zj.banner.ui.config
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.zj.banner.ui.pagetransformer.BasePageTransformer
 
 data class BannerConfig(
     // banner 高度
@@ -15,8 +15,8 @@ data class BannerConfig(
     var shape: Shape = RoundedCornerShape(10.dp),
     // banner 切换间隔时间
     var intervalTime: Long = 3000,
+    // 使用可选的scale参数来确定要使用的纵横比缩放
+    var contentScale: ContentScale = ContentScale.Crop,
     // 是否循环播放
     var repeat: Boolean = true,
-    // banner 图片切换动画
-    var transformer: BasePageTransformer? = null
 )
