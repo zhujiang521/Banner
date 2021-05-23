@@ -33,7 +33,7 @@ private const val TAG = "BannerPager"
  * [Indicator] 即可。
  * @param onBannerClick Banner 点击事件的回调
  */
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun <T : BaseBannerBean> BannerPager(
     modifier: Modifier = Modifier,
@@ -73,7 +73,8 @@ fun <T : BaseBannerBean> BannerPager(
 var mTimer: Timer? = null
 var mTimerTask: TimerTask? = null
 
-@ExperimentalPagerApi
+
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun startBanner(pagerState: PagerState, intervalTime: Long) {
     val coroutineScope = rememberCoroutineScope()

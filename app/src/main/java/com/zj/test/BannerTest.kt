@@ -21,8 +21,6 @@ data class BannerBean(
     override val data: Any? = null
 ) : BaseBannerBean()
 
-
-@ExperimentalPagerApi
 @Composable
 fun BannerTest() {
     val context = LocalContext.current
