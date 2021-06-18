@@ -49,7 +49,7 @@ fun <T : BaseBannerBean> BannerPager(
     val pagerState = rememberPagerState(pageCount = items.size)
 
     if (config.repeat) {
-        startBanner(pagerState, config.intervalTime)
+        StartBanner(pagerState, config.intervalTime)
     }
 
     Box(modifier = modifier.height(config.bannerHeight)) {
@@ -76,7 +76,7 @@ var mTimerTask: TimerTask? = null
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun startBanner(pagerState: PagerState, intervalTime: Long) {
+fun StartBanner(pagerState: PagerState, intervalTime: Long) {
     val coroutineScope = rememberCoroutineScope()
     mTimer?.cancel()
     mTimerTask?.cancel()

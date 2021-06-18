@@ -30,14 +30,14 @@ import com.zj.banner.ui.indicator.BannerGravity.BottomRight
  * @param gravity 指示器位置
  */
 class NumberIndicator(
-    var backgroundColor: Color = Color(30, 30, 33, 90),
-    var numberColor: Color = Color.White,
-    var circleSize: Dp = 35.dp,
-    var fontSize: TextUnit = 15.sp,
+    private var backgroundColor: Color = Color(30, 30, 33, 90),
+    private var numberColor: Color = Color.White,
+    private var circleSize: Dp = 35.dp,
+    private var fontSize: TextUnit = 15.sp,
     override var gravity: Int = BottomRight,
 ) : Indicator() {
 
-    @ExperimentalPagerApi
+    @OptIn(ExperimentalPagerApi::class)
     @Composable
     override fun DrawIndicator(pagerState: PagerState) {
         val alignment: Alignment = when (gravity) {
@@ -52,14 +52,18 @@ class NumberIndicator(
             }
             else -> Alignment.BottomEnd
         }
-        Box(modifier = Modifier.fillMaxSize().padding(10.dp), contentAlignment = alignment) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp), contentAlignment = alignment) {
             Box(
-                modifier = Modifier.size(circleSize).clip(CircleShape)
+                modifier = Modifier
+                    .size(circleSize)
+                    .clip(CircleShape)
                     .background(color = backgroundColor),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    "${pagerState.currentPage + 1}/${pagerState.pageCount}",
+                    text = "${pagerState.currentPage + 1}/${pagerState.pageCount}",
                     color = numberColor,
                     fontSize = fontSize
                 )
