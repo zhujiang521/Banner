@@ -37,7 +37,7 @@ class NumberIndicator(
     override var gravity: Int = BottomRight,
 ) : Indicator() {
 
-    @OptIn(ExperimentalPagerApi::class)
+    @ExperimentalPagerApi
     @Composable
     override fun DrawIndicator(pagerState: PagerState) {
         val alignment: Alignment = when (gravity) {

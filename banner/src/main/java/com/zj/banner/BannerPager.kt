@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -33,7 +34,7 @@ private const val TAG = "BannerPager"
  * [Indicator] 即可。
  * @param onBannerClick Banner 点击事件的回调
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalCoilApi::class)
 @Composable
 fun <T : BaseBannerBean> BannerPager(
     modifier: Modifier = Modifier,
@@ -46,18 +47,20 @@ fun <T : BaseBannerBean> BannerPager(
         throw NullPointerException("items is not null")
     }
 
-    val pagerState = rememberPagerState(pageCount = items.size)
+    val pagerState = rememberPagerState()
 
     if (config.repeat) {
         StartBanner(pagerState, config.intervalTime)
     }
 
     Box(modifier = modifier.height(config.bannerHeight)) {
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(count = items.size, state = pagerState) { page ->
             val item = items[page]
             BannerCard(
                 bean = item,
-                modifier = Modifier.fillMaxSize().padding(config.bannerImagePadding),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(config.bannerImagePadding),
                 shape = config.shape,
                 contentScale = config.contentScale
             ) {
@@ -74,7 +77,7 @@ var mTimer: Timer? = null
 var mTimerTask: TimerTask? = null
 
 
-@OptIn(ExperimentalPagerApi::class)
+@ExperimentalPagerApi
 @Composable
 fun StartBanner(pagerState: PagerState, intervalTime: Long) {
     val coroutineScope = rememberCoroutineScope()

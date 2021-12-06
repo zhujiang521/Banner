@@ -31,20 +31,23 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         transparentStatusBar()
         setAndroidNativeLightStatusBar()
-        mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        // 陀螺仪传感器
-        mMagneticSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-
-        mSensorManager.registerListener(this, mMagneticSensor, SensorManager.SENSOR_DELAY_GAME)
-
+//        mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//        // 陀螺仪传感器
+//        mMagneticSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+//
+//        mSensorManager.registerListener(this, mMagneticSensor, SensorManager.SENSOR_DELAY_GAME)
+//
+//        setContent {
+//            BannerTheme {
+//                val xState by viewModel.xState.observeAsState(0f)
+//                val yState by viewModel.yState.observeAsState(0f)
+//                Surface(color = MaterialTheme.colors.background) {
+//                    ThreeDImage(xState, yState)
+//                }
+//            }
+//        }
         setContent {
-            BannerTheme {
-                val xState by viewModel.xState.observeAsState(0f)
-                val yState by viewModel.yState.observeAsState(0f)
-                Surface(color = MaterialTheme.colors.background) {
-                    ThreeDImage(xState, yState)
-                }
-            }
+            BannerTest()
         }
     }
 
