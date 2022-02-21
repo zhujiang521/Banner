@@ -7,15 +7,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.zj.banner.BannerPager
 import com.zj.banner.model.BaseBannerBean
-import com.zj.banner.ui.indicator.BannerGravity
-import com.zj.banner.ui.indicator.CircleIndicator
-import com.zj.banner.ui.indicator.NumberIndicator
 
 data class BannerBean(
     override val data: Any? = null
@@ -25,7 +22,9 @@ data class BannerBean(
 fun BannerTest() {
     val context = LocalContext.current
     val scroller = rememberScrollState()
-    Column(modifier = Modifier.fillMaxSize().verticalScroll(scroller)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(scroller)) {
 
 
         val items = arrayListOf(
@@ -45,6 +44,7 @@ fun BannerTest() {
 
         BannerPager(
             items = items,
+            indicatorGravity = Alignment.BottomStart
         ) { item ->
             Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
         }
@@ -60,7 +60,7 @@ fun BannerTest() {
         BannerPager(
             modifier = Modifier.padding(top = 10.dp),
             items = items2,
-            indicator = CircleIndicator(gravity = BannerGravity.BottomLeft)
+            indicatorGravity = Alignment.BottomEnd
         ) { item ->
             Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
         }
@@ -69,7 +69,6 @@ fun BannerTest() {
         BannerPager(
             modifier = Modifier.padding(top = 10.dp),
             items = items,
-            indicator = NumberIndicator()
         ) { item ->
             Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
         }
@@ -78,7 +77,8 @@ fun BannerTest() {
         BannerPager(
             modifier = Modifier.padding(top = 10.dp),
             items = items2,
-            indicator = NumberIndicator(gravity = BannerGravity.BottomLeft)
+            indicatorIsVertical = true,
+            indicatorGravity = Alignment.BottomEnd
         ) { item ->
             Toast.makeText(context, "item:$item", Toast.LENGTH_SHORT).show()
         }

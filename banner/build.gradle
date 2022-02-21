@@ -69,8 +69,10 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
 
     def accompanist_coil_version = "0.15.0"
-    def accompanist_version = "0.21.5-rc"
+    def accompanist_version = "0.24.2-alpha"
     api "com.google.accompanist:accompanist-pager:$accompanist_version"
     api "com.google.accompanist:accompanist-coil:$accompanist_coil_version"
     api "com.google.accompanist:accompanist-insets:$accompanist_version"
+    api "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+
 }
