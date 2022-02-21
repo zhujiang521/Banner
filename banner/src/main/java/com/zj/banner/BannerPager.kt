@@ -84,23 +84,20 @@ fun <T : BaseBannerBean> BannerPager(
     }
 }
 
-var mTimer: Timer? = null
-var mTimerTask: TimerTask? = null
+
 
 
 @ExperimentalPagerApi
 @Composable
 fun StartBanner(pagerState: PagerState, intervalTime: Long) {
     val coroutineScope = rememberCoroutineScope()
-    mTimer?.cancel()
-    mTimerTask?.cancel()
-    mTimer = Timer()
-    mTimerTask = object : TimerTask() {
+    val timer = Timer()
+    val timerTask = object : TimerTask() {
         override fun run() {
             coroutineScope.launch {
                 pagerState.animateScrollToPage((pagerState.currentPage + 1) % pagerState.pageCount)
             }
         }
     }
-    mTimer?.schedule(mTimerTask, intervalTime, intervalTime)
+    timer.schedule(timerTask, intervalTime, intervalTime)
 }
