@@ -54,7 +54,12 @@ fun <T : BaseBannerBean> BannerPager(
     }
 
     Box(modifier = modifier.height(config.bannerHeight)) {
-        HorizontalPager(count = items.size, state = pagerState) { page ->
+        HorizontalPager(
+            count = items.size,
+            state = pagerState,
+            itemSpacing = config.itemSpacing,
+            contentPadding = config.contentPadding
+        ) { page ->
             val item = items[page]
             BannerCard(
                 bean = item,
@@ -109,8 +114,6 @@ fun <T : BaseBannerBean> BannerPager(
 
     }
 }
-
-
 
 
 @ExperimentalPagerApi

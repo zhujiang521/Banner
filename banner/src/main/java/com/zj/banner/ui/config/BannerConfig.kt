@@ -1,5 +1,6 @@
 package com.zj.banner.ui.config
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -19,4 +20,8 @@ data class BannerConfig(
     var contentScale: ContentScale = ContentScale.Crop,
     // 是否循环播放
     var repeat: Boolean = true,
+    // 添加项目之间的水平间距
+    var itemSpacing: Dp = 0.dp,
+    // 将水平填充添加到“居中”页面
+    var contentPadding: PaddingValues = PaddingValues(0.dp),
 )
