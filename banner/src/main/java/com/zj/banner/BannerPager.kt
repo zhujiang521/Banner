@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.*
 import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.ui.BannerCard
@@ -33,7 +32,7 @@ private const val TAG = "BannerPager"
  * @param indicatorGravity Banner 指示器位置，直接使用 Alignment 即可进行设定
  * @param onBannerClick Banner 点击事件的回调
  */
-@OptIn(ExperimentalPagerApi::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun <T : BaseBannerBean> BannerPager(
     modifier: Modifier = Modifier,

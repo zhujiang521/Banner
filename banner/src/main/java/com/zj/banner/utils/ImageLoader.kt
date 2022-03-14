@@ -9,9 +9,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.LocalImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 
 private const val TAG = "ImageLoader"
 
@@ -22,7 +20,6 @@ private const val TAG = "ImageLoader"
  * @param modifier 修饰符
  * @param contentScale 使用可选的scale参数来确定要使用的纵横比缩放
  */
-@ExperimentalCoilApi
 @Composable
 fun ImageLoader(
     data: Any?,
@@ -33,9 +30,8 @@ fun ImageLoader(
         is String -> {
             val painter = if (data.contains("https://") || data.contains("http://")) {
                 Log.d(TAG, "PostCardPopular: 加载网络图片")
-                rememberImagePainter(
-                    data = data,
-                    imageLoader = LocalImageLoader.current,
+                rememberAsyncImagePainter(
+                    model = data,
                 )
             } else {
                 Log.d(TAG, "PostCardPopular: 加载本地图片")

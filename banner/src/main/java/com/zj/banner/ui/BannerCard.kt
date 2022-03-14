@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
 import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.utils.ImageLoader
 
@@ -21,7 +20,6 @@ import com.zj.banner.utils.ImageLoader
  * @param contentScale 纵横比缩放
  * @param onBannerClick Banner 图片点击事件
  */
-@ExperimentalCoilApi
 @Composable
 fun <T : BaseBannerBean> BannerCard(
     bean: T,
