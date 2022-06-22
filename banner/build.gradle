@@ -17,7 +17,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.zj.banner'
                 artifactId = 'banner'
-                version = '2.3.0'
+                version = '2.3.1'
             }
 //            // Creates a Maven publication called “debug”.
 //            debug(MavenPublication) {
@@ -33,11 +33,11 @@ afterEvaluate {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         minSdk 24
-        targetSdk 31
+        targetSdk 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
