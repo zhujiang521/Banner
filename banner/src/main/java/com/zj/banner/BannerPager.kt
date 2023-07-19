@@ -1,10 +1,16 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.zj.banner
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -12,10 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import com.google.accompanist.pager.*
 import com.zj.banner.model.BaseBannerBean
 import com.zj.banner.ui.BannerCard
 import com.zj.banner.ui.config.BannerConfig
+import com.zj.banner.utils.HorizontalPagerIndicator
+import com.zj.banner.utils.VerticalPagerIndicator
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.absoluteValue
@@ -32,7 +39,6 @@ private const val TAG = "BannerPager"
  * @param indicatorGravity Banner 指示器位置，直接使用 Alignment 即可进行设定
  * @param onBannerClick Banner 点击事件的回调
  */
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun <T : BaseBannerBean> BannerPager(
     modifier: Modifier = Modifier,
@@ -46,7 +52,12 @@ fun <T : BaseBannerBean> BannerPager(
         throw NullPointerException("items is not null")
     }
 
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        items.size
+    }
 
     if (config.repeat) {
         StartBanner(pagerState, config.intervalTime)
@@ -54,50 +65,55 @@ fun <T : BaseBannerBean> BannerPager(
 
     Box(modifier = modifier.height(config.bannerHeight)) {
         HorizontalPager(
-            count = items.size,
+            modifier = Modifier,
             state = pagerState,
-            itemSpacing = config.itemSpacing,
-            contentPadding = config.contentPadding
-        ) { page ->
-            val item = items[page]
-            BannerCard(
-                bean = item,
-                modifier = Modifier
-                    .graphicsLayer {
-                        // Calculate the absolute offset for the current page from the
-                        // scroll position. We use the absolute value which allows us to mirror
-                        // any effects for both directions
-                        val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+            key = { items[it].data?:it },
+            pageContent = { page ->
+                val item = items[page]
 
-                        // We animate the scaleX + scaleY, between 85% and 100%
-                        lerp(
-                            start = 0.85f,
-                            stop = 1f,
-                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                        ).also { scale ->
-                            scaleX = scale
-                            scaleY = scale
+                BannerCard(
+                    bean = item,
+                    modifier = Modifier
+                        .graphicsLayer {
+                            // Calculate the absolute offset for the current page from the
+                            // scroll position. We use the absolute value which allows us to mirror
+                            // any effects for both directions
+                            val offset =
+                                (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+                            val pageOffset = offset.absoluteValue
+
+                            // We animate the scaleX + scaleY, between 85% and 100%
+                            lerp(
+                                start = 0.85f,
+                                stop = 1f,
+                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                            ).also { scale ->
+                                scaleX = scale
+                                scaleY = scale
+                            }
+
+                            // We animate the alpha, between 50% and 100%
+                            alpha = lerp(
+                                start = 0.5f,
+                                stop = 1f,
+                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                            )
                         }
-
-                        // We animate the alpha, between 50% and 100%
-                        alpha = lerp(
-                            start = 0.5f,
-                            stop = 1f,
-                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                        )
-                    }
-                    .fillMaxSize()
-                    .padding(config.bannerImagePadding),
-                shape = config.shape,
-                contentScale = config.contentScale
-            ) {
-                Log.d(TAG, "item is :${item.javaClass}")
-                onBannerClick(item)
+                        .fillMaxSize()
+                        .padding(config.bannerImagePadding),
+                    shape = config.shape,
+                    contentScale = config.contentScale
+                ) {
+                    Log.d(TAG, "item is :${item.javaClass}")
+                    onBannerClick(item)
+                }
             }
-        }
+        )
+
         if (indicatorIsVertical) {
             VerticalPagerIndicator(
                 pagerState = pagerState,
+                pageCount = items.size,
                 modifier = Modifier
                     .align(indicatorGravity)
                     .padding(16.dp),
@@ -105,6 +121,7 @@ fun <T : BaseBannerBean> BannerPager(
         } else {
             HorizontalPagerIndicator(
                 pagerState = pagerState,
+                pageCount = items.size,
                 modifier = Modifier
                     .align(indicatorGravity)
                     .padding(16.dp),
@@ -114,8 +131,6 @@ fun <T : BaseBannerBean> BannerPager(
     }
 }
 
-
-@ExperimentalPagerApi
 @Composable
 fun StartBanner(pagerState: PagerState, intervalTime: Long) {
     val coroutineScope = rememberCoroutineScope()
