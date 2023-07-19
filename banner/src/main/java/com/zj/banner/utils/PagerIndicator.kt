@@ -127,9 +127,11 @@ private fun HorizontalPagerIndicator(
         Box(
             Modifier
                 .offset {
-                    val position = pageIndexMapping(pagerState.currentPage)
+                    val currentPage = pagerState.currentPage
+                    val p = currentPage % pageCount
+                    val position = pageIndexMapping(p)
                     val offset = pagerState.currentPageOffset
-                    val next = pageIndexMapping(pagerState.currentPage + offset.sign.toInt())
+                    val next = pageIndexMapping(p + offset.sign.toInt())
                     val scrollPosition = ((next - position) * offset.absoluteValue + position)
                         .coerceIn(
                             0f,
@@ -253,9 +255,11 @@ private fun VerticalPagerIndicator(
         Box(
             Modifier
                 .offset {
-                    val position = pageIndexMapping(pagerState.currentPage)
+                    val currentPage = pagerState.currentPage
+                    val p = currentPage % pageCount
+                    val position = pageIndexMapping(p)
                     val offset = pagerState.currentPageOffset
-                    val next = pageIndexMapping(pagerState.currentPage + offset.sign.toInt())
+                    val next = pageIndexMapping(p + offset.sign.toInt())
                     val scrollPosition = ((next - position) * offset.absoluteValue + position)
                         .coerceIn(
                             0f,

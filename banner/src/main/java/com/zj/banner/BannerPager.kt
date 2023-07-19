@@ -28,6 +28,7 @@ import java.util.*
 import kotlin.math.absoluteValue
 
 private const val TAG = "BannerPager"
+private const val FAKE_BANNER_SIZE = 100
 
 /**
  * 新增一个 Banner，最简单的情况下只需传入数据即可，如果需要更多样式请查看下面参数。
@@ -51,25 +52,29 @@ fun <T : BaseBannerBean> BannerPager(
     if (items.isEmpty()) {
         throw NullPointerException("items is not null")
     }
-
+    val size = items.size
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
     ) {
-        items.size
+        FAKE_BANNER_SIZE
     }
 
     if (config.repeat) {
         StartBanner(pagerState, config.intervalTime)
     }
+    val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = modifier.height(config.bannerHeight)) {
         HorizontalPager(
             modifier = Modifier,
             state = pagerState,
-            key = { items[it].data?:it },
+            key = {
+                it
+            },
             pageContent = { page ->
-                val item = items[page]
+                val p = page % size
+                val item = items[p]
 
                 BannerCard(
                     bean = item,
@@ -98,6 +103,20 @@ fun <T : BaseBannerBean> BannerPager(
                                 stop = 1f,
                                 fraction = 1f - pageOffset.coerceIn(0f, 1f)
                             )
+
+                            var position: Int = pagerState.currentPage
+                            Log.d(TAG, "finish update before, position=$position")
+                            if (position == 0) {
+                                position = size
+                                coroutineScope.launch {
+                                    pagerState.scrollToPage(position)
+                                }
+                            } else if (position == FAKE_BANNER_SIZE - 1) {
+                                position = size - 1
+                                coroutineScope.launch {
+                                    pagerState.scrollToPage(position)
+                                }
+                            }
                         }
                         .fillMaxSize()
                         .padding(config.bannerImagePadding),
@@ -113,7 +132,7 @@ fun <T : BaseBannerBean> BannerPager(
         if (indicatorIsVertical) {
             VerticalPagerIndicator(
                 pagerState = pagerState,
-                pageCount = items.size,
+                pageCount = size,
                 modifier = Modifier
                     .align(indicatorGravity)
                     .padding(16.dp),
@@ -121,7 +140,7 @@ fun <T : BaseBannerBean> BannerPager(
         } else {
             HorizontalPagerIndicator(
                 pagerState = pagerState,
-                pageCount = items.size,
+                pageCount = size,
                 modifier = Modifier
                     .align(indicatorGravity)
                     .padding(16.dp),
