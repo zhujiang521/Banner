@@ -12,6 +12,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -103,20 +104,6 @@ fun <T : BaseBannerBean> BannerPager(
                                 stop = 1f,
                                 fraction = 1f - pageOffset.coerceIn(0f, 1f)
                             )
-
-                            var position: Int = pagerState.currentPage
-                            Log.d(TAG, "finish update before, position=$position")
-                            if (position == 0) {
-                                position = size
-                                coroutineScope.launch {
-                                    pagerState.scrollToPage(position)
-                                }
-                            } else if (position == FAKE_BANNER_SIZE - 1) {
-                                position = size - 1
-                                coroutineScope.launch {
-                                    pagerState.scrollToPage(position)
-                                }
-                            }
                         }
                         .fillMaxSize()
                         .padding(config.bannerImagePadding),
@@ -128,6 +115,22 @@ fun <T : BaseBannerBean> BannerPager(
                 }
             }
         )
+
+        LaunchedEffect(key1 = pagerState){
+            var position: Int = pagerState.currentPage
+            Log.d(TAG, "finish update before, position=$position")
+            if (position == 0) {
+                position = size
+                coroutineScope.launch {
+                    pagerState.scrollToPage(position)
+                }
+            } else if (position == FAKE_BANNER_SIZE - 1) {
+                position = size - 1
+                coroutineScope.launch {
+                    pagerState.scrollToPage(position)
+                }
+            }
+        }
 
         if (indicatorIsVertical) {
             VerticalPagerIndicator(
