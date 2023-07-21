@@ -104,7 +104,6 @@ fun <T : BaseBannerBean> BannerPager(
                                 fraction = 1f - pageOffset.coerceIn(0f, 1f)
                             )
                         }
-                        .fillMaxSize()
                         .padding(config.bannerImagePadding),
                     shape = config.shape,
                     imageRatio = config.imageRatio,
