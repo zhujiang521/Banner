@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -66,7 +65,7 @@ fun <T : BaseBannerBean> BannerPager(
     }
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = modifier.height(config.bannerHeight)) {
+    Box(modifier = modifier) {
         HorizontalPager(
             modifier = Modifier,
             state = pagerState,
@@ -108,6 +107,7 @@ fun <T : BaseBannerBean> BannerPager(
                         .fillMaxSize()
                         .padding(config.bannerImagePadding),
                     shape = config.shape,
+                    imageRatio = config.imageRatio,
                     contentScale = config.contentScale
                 ) {
                     Log.d(TAG, "item is :${item.javaClass}")
@@ -116,7 +116,7 @@ fun <T : BaseBannerBean> BannerPager(
             }
         )
 
-        LaunchedEffect(key1 = pagerState){
+        LaunchedEffect(key1 = pagerState) {
             var position: Int = pagerState.currentPage
             Log.d(TAG, "finish update before, position=$position")
             if (position == 0) {

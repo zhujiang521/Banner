@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 
 data class BannerConfig(
     // banner 高度
-    var bannerHeight: Dp = 210.dp,
+    var imageRatio: Float = 2f,
     // banner 图片距离四周的 padding 值
     var bannerImagePadding: Dp = 8.dp,
     // banner 图片的 shape

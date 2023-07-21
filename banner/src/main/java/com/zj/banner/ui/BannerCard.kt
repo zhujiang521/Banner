@@ -1,6 +1,7 @@
 package com.zj.banner.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ fun <T : BaseBannerBean> BannerCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(10.dp),
     contentScale: ContentScale,
+    imageRatio: Float = 2f,
     onBannerClick: () -> Unit,
 ) {
     if (bean.data == null) {
@@ -37,6 +39,6 @@ fun <T : BaseBannerBean> BannerCard(
         modifier = modifier
     ) {
         val imgModifier = Modifier.clickable(onClick = onBannerClick)
-        ImageLoader(bean.data, imgModifier, contentScale)
+        ImageLoader(bean.data, imgModifier.aspectRatio(imageRatio), contentScale)
     }
 }
