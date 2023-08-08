@@ -23,12 +23,13 @@ import com.zj.banner.ui.BannerCard
 import com.zj.banner.ui.config.BannerConfig
 import com.zj.banner.utils.HorizontalPagerIndicator
 import com.zj.banner.utils.VerticalPagerIndicator
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.absoluteValue
 
 private const val TAG = "BannerPager"
-private const val FAKE_BANNER_SIZE = 100
 
 /**
  * 新增一个 Banner，最简单的情况下只需传入数据即可，如果需要更多样式请查看下面参数。
@@ -53,18 +54,20 @@ fun <T : BaseBannerBean> BannerPager(
         throw NullPointerException("items is not null")
     }
     val size = items.size
+
+    val loopingCount = Int.MAX_VALUE
+    var startIndex = loopingCount / 2
+    startIndex -= startIndex % size
     val pagerState = rememberPagerState(
-        initialPage = 0,
+        initialPage = startIndex,
         initialPageOffsetFraction = 0f
     ) {
-        FAKE_BANNER_SIZE
+        loopingCount
     }
 
-    if (config.repeat) {
-        StartBanner(pagerState, config.intervalTime)
+    fun pageMapper(index: Int): Int {
+        return (index - startIndex).floorMod(size)
     }
-    val coroutineScope = rememberCoroutineScope()
-
     Box(modifier = modifier) {
         HorizontalPager(
             modifier = Modifier,
@@ -115,18 +118,24 @@ fun <T : BaseBannerBean> BannerPager(
             }
         )
 
-        LaunchedEffect(key1 = pagerState) {
-            var position: Int = pagerState.currentPage
-            Log.d(TAG, "finish update before, position=$position")
-            if (position == 0) {
-                position = size
-                coroutineScope.launch {
-                    pagerState.scrollToPage(position)
-                }
-            } else if (position == FAKE_BANNER_SIZE - 1) {
-                position = size - 1
-                coroutineScope.launch {
-                    pagerState.scrollToPage(position)
+        if (config.repeat) {
+            LaunchedEffect(key1 = pagerState) {
+                try {
+                    while (true) {
+                        delay(config.intervalTime)
+                        val current = pagerState.currentPage
+                        val currentPos = pageMapper(current)
+                        val nextPage = current + 1
+                        val toPage = nextPage.takeIf { nextPage < pagerState.pageCount }
+                            ?: (currentPos + startIndex + 1)
+                        if (toPage > current) {
+                            pagerState.animateScrollToPage(toPage)
+                        } else {
+                            pagerState.scrollToPage(toPage)
+                        }
+                    }
+                } catch (e: CancellationException) {
+                    Log.i("page", "Launched paging cancelled")
                 }
             }
         }
@@ -152,16 +161,7 @@ fun <T : BaseBannerBean> BannerPager(
     }
 }
 
-@Composable
-fun StartBanner(pagerState: PagerState, intervalTime: Long) {
-    val coroutineScope = rememberCoroutineScope()
-    val timer = Timer()
-    val timerTask = object : TimerTask() {
-        override fun run() {
-            coroutineScope.launch {
-                pagerState.animateScrollToPage((pagerState.currentPage + 1) % pagerState.pageCount)
-            }
-        }
-    }
-    timer.schedule(timerTask, intervalTime, intervalTime)
+private fun Int.floorMod(other: Int): Int = when (other) {
+    0 -> this
+    else -> this - floorDiv(other) * other
 }

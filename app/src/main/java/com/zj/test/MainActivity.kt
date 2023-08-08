@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        mSensorManager.unregisterListener(this)
+//        mSensorManager.unregisterListener(this)
     }
 
 }
